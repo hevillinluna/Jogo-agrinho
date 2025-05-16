@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Tabuleiro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Jogo de Tabuleiro de Perguntas</h1>
+
+    <!-- Tabuleiro -->
+    <div id="board">
+        <div class="tile" id="tile1">Nível A</div>
+        <div class="tile" id="tile2">Nível B</div>
+        <div class="tile" id="tile3">Nível C</div>
+        <div class="tile" id="tile4">Nível D</div>
+        <div class="tile" id="tile5">Nível E</div>
+        <div class="tile" id="tile6">Nível F</div>
+        <div class="tile" id="tile7">Nível G</div>
+        <div class="tile" id="tile8">Nível H</div>
+        <div class="tile" id="tile9">Nível I</div>
+        <div class="tile" id="tile10">Nível J</div>
+    </div>
+
+    <!-- Indicador de posição do jogador -->
+    <div id="playerPosition" class="player-position">
+        <p>Posição atual: <span id="currentPosition">Casa 1</span></p>
+    </div>
+
+    <!-- Pergunta -->
+    <div id="questionArea" class="question-area">
+        <p id="question">Clique em "Avançar" para começar!</p>
+        <div id="options" class="options"></div>
+    </div>
+
+    <button id="nextTurnBtn">Avançar</button>
+
+    <!-- Resultado -->
+    <div class="result" id="result"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
