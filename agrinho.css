@@ -1,84 +1,249 @@
+/* Estilos globais e de animação para o corpo e o contêiner do jogo */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #fff0f5;
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.5s ease-in-out, background-image 0.5s ease-in-out; /* Transição suave para mudança de tema */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
     padding: 20px;
+    overflow: hidden; /* Garante que elementos fora da tela não causem rolagem */
+}
+/* Temas de fundo dinâmicos para Campo e Cidade */
+body.theme-campo {
+    background-color: #dcedc8; /* Verde claro */
+    background-image: linear-gradient(to bottom, #dcedc8, #aed581); /* Gradiente suave */
+}
+body.theme-cidade {
+    background-color: #bbdefb; /* Azul claro */
+    background-image: linear-gradient(to bottom, #bbdefb, #90caf9); /* Gradiente suave */
 }
 
-h1 {
+.game-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 90%;
+    max-width: 800px;
     text-align: center;
-    color: #ff1493;
+    position: relative;
+    overflow: hidden; /* Esconde elementos que podem sair das bordas */
+    z-index: 1; /* Garante que o contêiner do jogo esteja acima dos elementos de fundo */
 }
 
-.player-position {
-    margin-top: 20px;
-    font-size: 1.2rem;
-    color: #333;
+/* Estilos para as casas do tabuleiro */
+.board-space {
+    width: 60px;
+    height: 60px;
+    background-color: #e0f2f7; /* Ciano claro */
+    border: 3px solid #b2ebf2; /* Ciano médio */
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-weight: bold;
+    color: #00838f; /* Texto ciano escuro */
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra interna para profundidade */
+}
+/* Estilo da casa ativa (onde o jogador está) */
+.board-space.active {
+    background-color: #80deea; /* Ciano mais brilhante */
+    border-color: #00bcd4; /* Ciano de destaque */
+    transform: scale(1.1); /* Efeito de "pulo" */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra externa mais pronunciada */
 }
 
-#currentPosition {
-    color: #ff66b2;
-}
-
-#board {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-gap: 10px;
-    margin-top: 20px;
-}
-
-.tile {
-    padding: 20px;
-    background-color: #f9c3d2;
-    border-radius: 8px;
-    cursor: default;
-    transition: background-color 0.3s;
-    text-align: center;
-    font-weight: bold;
-}
-
-.tile.active {
-    background-color: #ff66b2;
-    color: #fff;
-}
-
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #00bfff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #1e90ff;
-}
-
-.question-area {
-    margin-top: 20px;
-}
-
-.options button {
-    margin: 5px;
-    padding: 10px 20px;
-    background-color: #ff66b2;
+/* Estilos para o token do jogador */
+.player-token {
+    width: 50px;
+    height: 50px;
+    background-color: #ff8a65; /* Laranja-avermelhado */
+    border: 3px solid #f4511e; /* Laranja-avermelhado mais escuro */
+    border-radius: 50%;
+    position: absolute; /* Posicionamento absoluto para movimento livre */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.options button:hover {
-    background-color: #ff1493;
-}
-
-.result {
-    margin-top: 20px;
-    font-size: 20px;
     font-weight: bold;
-    color: #ff66b2;
+    font-size: 1.5rem;
+    transition: all 0.7s ease-in-out; /* Transição suave para o movimento */
+    z-index: 10; /* Garante que o token esteja sempre visível acima das casas */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    /* Transformações iniciais para centralizar o token na casa */
+    transform: translate(-50%, -50%);
 }
+
+/* Estilos da seção do quiz */
+.quiz-card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    padding: 25px;
+    margin-top: 20px;
+    border: 2px solid #a7ffeb; /* Borda verde clara */
+    transform: scale(0.95); /* Começa ligeiramente menor */
+    opacity: 0; /* Começa invisível */
+    transition: all 0.4s ease-out; /* Animação de entrada/saída */
+    pointer-events: none; /* Desabilita interações quando invisível */
+    z-index: 15; /* Acima do token e do tabuleiro */
+}
+/* Estilo da seção do quiz ativa */
+.quiz-card.active {
+    transform: scale(1); /* Expande para o tamanho normal */
+    opacity: 1; /* Torna visível */
+    pointer-events: auto; /* Habilita interações */
+}
+
+/* Estilos dos botões de opção do quiz */
+.option-button {
+    background-color: #e0f7fa; /* Ciano mais claro */
+    color: #006064; /* Verde-azulado escuro */
+    border: 2px solid #b2ebf2; /* Ciano médio */
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+.option-button:hover {
+    background-color: #b2ebf2; /* Ciano médio */
+    transform: translateY(-2px); /* Efeito de "levitação" */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+.option-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+/* Estilos para feedback de resposta correta/incorreta */
+.option-button.correct {
+    background-color: #a5d6a7; /* Verde claro */
+    border-color: #66bb6a; /* Verde médio */
+    color: #1b5e20; /* Verde escuro */
+}
+.option-button.incorrect {
+    background-color: #ef9a9a; /* Vermelho claro */
+    border-color: #e57373; /* Vermelho médio */
+    color: #b71c1c; /* Vermelho escuro */
+}
+/* Estilo da mensagem de feedback */
+.feedback-message {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    animation: fadein 0.5s; /* Animação de aparecimento */
+}
+/* Keyframe para animação de fade-in */
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+/* Desabilita os botões de opção após uma seleção */
+.disabled-options .option-button {
+    pointer-events: none; /* Impede novos cliques */
+    opacity: 0.7; /* Escurece os botões */
+}
+
+/* Animação genérica para elementos de fundo */
+.bicho, .flor {
+    animation: float 3s ease-in-out infinite alternate;
+    position: absolute;
+    opacity: 1; /* Sempre visível */
+    z-index: 0; /* No fundo */
+}
+/* Keyframe para animação de flutuação */
+@keyframes float {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+/* Estilos específicos para animais do campo */
+.bicho.coelho {
+    width: 60px; height: 60px; background-color: #f7e1d7; border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.bicho.coelho::before, .bicho.coelho::after { /* Orelhas */
+    content: ''; position: absolute; width: 10px; height: 25px;
+    background-color: #f7e1d7; border-radius: 50%; top: -15px;
+}
+.bicho.coelho::before { left: 15px; transform: rotate(-25deg); }
+.bicho.coelho::after { right: 15px; transform: rotate(25deg); }
+
+.bicho.vaca {
+    width: 70px; height: 50px; background-color: #f5f5dc; border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.bicho.ovelha {
+    width: 65px; height: 45px; background-color: #f5f5f5; border-radius: 50% 50% 10% 10%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Estilos específicos para animais da cidade (ou que se encaixam em ambos) */
+.bicho.gato {
+    width: 55px; height: 55px; background-color: #a6a6a6; border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.bicho.gato::before, .bicho.gato::after { /* Orelhas */
+    content: ''; position: absolute; width: 0; height: 0; border-left: 10px solid transparent;
+    border-right: 10px solid transparent; border-bottom: 15px solid #a6a6a6; top: -15px;
+}
+.bicho.gato::before { left: 10px; transform: rotate(-5deg); }
+.bicho.gato::after { right: 10px; transform: rotate(5deg); }
+
+.bicho.cachorro {
+    width: 65px; height: 65px; background-color: #8b4513; border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.bicho.cachorro::before, .bicho.cachorro::after { /* Orelhas */
+    content: ''; position: absolute; width: 15px; height: 30px;
+    background-color: #654321; border-radius: 50%; top: -10px;
+}
+.bicho.cachorro::before { left: 5px; transform: rotate(-30deg); }
+.bicho.cachorro::after { right: 5px; transform: rotate(30deg); }
+
+
+/* Estilos específicos para flores/elementos de fundo */
+.flor {
+    width: 35px; height: 35px; background-color: #ffccbc; border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.flor.margarida { background-color: #fff9c4; }
+.flor.margarida::before { /* Pétalas */
+    content: ''; position: absolute; width: 10px; height: 25px;
+    background-color: #fff9c4; border-radius: 50%; transform: rotate(45deg); top: -10px; left: 12px;
+}
+.flor.margarida::after { /* Centro */
+    content: ''; position: absolute; width: 10px; height: 10px;
+    background-color: #ffd54f; border-radius: 50%; top: 12px; left: 12px;
+}
+
+.flor.girassol { background-color: #ffeb3b; }
+.flor.girassol::before { /* Pétalas */
+    content: ''; position: absolute; width: 12px; height: 30px;
+    background-color: #ffeb3b; border-radius: 50%; transform: rotate(20deg); top: -10px; left: 10px;
+}
+.flor.girassol::after { /* Centro */
+    content: ''; position: absolute; width: 15px; height: 15px;
+    background-color: #795548; border-radius: 50%; top: 10px; left: 10px;
+}
+
+.flor.planta-vaso {
+    width: 40px; height: 50px; background-color: #81c784; border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.flor.planta-vaso::before { /* Vaso */
+    content: ''; position: absolute; width: 30px; height: 20px;
+    background-color: #bf360c; border-radius: 5px; bottom: -10px; left: 5px;
+}
+
+.flor.arbusto {
+    width: 50px; height: 40px; background-color: #4caf50; border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
