@@ -1,283 +1,378 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+<audio id="start-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_5a5f67b61d.mp3"></audio>
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Conexão Campo e Cidade</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(to bottom, #b9fbc0, #ffffff);
-    margin: 0; padding: 20px; text-align: center; color: #333;
-  }
-  #question-container {
-    margin-top: 30px;
-  }
-  #question {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-  }
-  .answer-btn {
-    display: inline-block;
-    margin: 8px 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: none;
-    background-color: #d2f5c4;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  .answer-btn:hover:not(:disabled) {
-    background-color: #a5e59c;
-  }
-  #resultado {
-    margin-top: 20px;
-    font-weight: bold;
-    min-height: 70px;
-  }
-  #timer {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-top: 15px;
-  }
-  #score {
-    margin-top: 20px;
-    font-size: 1.2rem;
-  }
-  #start-screen {
-    margin-top: 100px;
-  }
-  #start-screen button {
-    padding: 15px 35px;
-    font-size: 1.3rem;
-    border-radius: 12px;
-    border: none;
-    background-color: #6cc070;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  #start-screen button:hover {
-    background-color: #4a8c44;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unindo e Aprendendo sobre o campo e a cidade!</title>
+  <style>
+    body {
+      background: url('https://thumbs.dreamstime.com/z/cidade-e-campo-29325364.jpg') no-repeat center center fixed;
+      background-color: #d3baa2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      color: #333;
+    }
+
+    #question-container {
+      margin-top: 30px;
+    }
+
+    #question {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+
+    .answer-btn {
+      display: inline-block;
+      margin: 8px 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      background-color: #d2f5c4;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .answer-btn:hover:not(:disabled) {
+      background-color: #a5e59c;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      min-height: 70px;
+    }
+
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    #score {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    #start-screen {
+      margin-top: 100px;
+    }
+
+    #start-screen button {
+      padding: 15px 35px;
+      font-size: 1.3rem;
+      border-radius: 12px;
+      border: none;
+      background-color: #6cc070;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #start-screen button:hover {
+      background-color: #4a8c44;
+    }
+  </style>
 </head>
+
 <body>
-
-<div id="start-screen">
-  <h1>Bem-vindo ao jogo!</h1>
-  <p>Vamos aprender um pouco sobre o campo e a cidade.</p>
-  <button id="start-btn">Iniciar</button>
-</div>
-
-<div id="game-container" style="display:none;">
-  <div id="score">Pontuação: 0</div>
-  <div id="timer">Tempo restante: 120s</div>
-  <div id="question-container">
-    <div id="question">Carregando pergunta...</div>
-    <div id="answers"></div>
+  <div id="start-screen">
+    <h1>🌱 Bem-vindo ao jogo!</h1>
+    <p>Vamos aprender um pouco sobre a conexão entre o campo e a cidade.</p>
+    <button id="start-btn">Iniciar</button>
   </div>
-  <div id="resultado"></div>
-</div>
 
-<script>
-  const perguntas = [
-    // Fase 1 - Fácil
-    {
-      pergunta: "Qual é o principal fator que afeta a biodiversidade em áreas urbanas?",
-      opcoes: ["Poluição sonora", "Fragmentação do habitat", "Iluminação pública", "Trânsito de veículos"],
-      respostaCorreta: 1,
-      justificativa: "A fragmentação do habitat interrompe corredores naturais, dificultando o fluxo e a sobrevivência das espécies."
-    },
-    {
-      pergunta: "Qual técnica agrícola é mais eficiente para conservação do solo em terrenos inclinados?",
-      opcoes: ["Plantio direto", "Rotação de culturas", "Terraços", "Queima controlada"],
-      respostaCorreta: 2,
-      justificativa: "Os terraços reduzem a velocidade da água da chuva, prevenindo erosão e preservando o solo."
-    },
-    {
-      pergunta: "Qual é a principal vantagem da agricultura orgânica?",
-      opcoes: ["Uso de fertilizantes sintéticos", "Maior produtividade imediata", "Preservação da saúde do solo", "Uso intensivo de pesticidas"],
-      respostaCorreta: 2,
-      justificativa: "A agricultura orgânica prioriza a saúde do solo, evitando produtos químicos sintéticos."
-    },
-    {
-      pergunta: "O que caracteriza a agricultura familiar?",
-      opcoes: ["Uso intensivo de máquinas", "Pequena escala e trabalho familiar", "Produção exclusivamente para exportação", "Uso exclusivo de sementes modificadas"],
-      respostaCorreta: 1,
-      justificativa: "A agricultura familiar é caracterizada pela pequena escala e o trabalho desenvolvido pela própria família."
-    },
-    {
-      pergunta: "Qual é o principal produto agrícola do Brasil?",
-      opcoes: ["Trigo", "Soja", "Café", "Milho"],
-      respostaCorreta: 1,
-      justificativa: "A soja é o principal produto agrícola do Brasil devido à sua ampla produção e exportação."
-    },
+  <div id="ranking" style="display:none;">
+    <h3>Ranking</h3>
+    <ul id="ranking-list"></ul>
+    <input type="text" id="player-name" placeholder="Digite seu nome" />
+    <button id="submit-score">Enviar Pontuação</button>
+  </div>
 
-    // Fase 2 - Médio
-    {
-      pergunta: "Qual a importância do corredor ecológico na zona rural?",
-      opcoes: ["Aumentar área de cultivo", "Conectar habitats para fauna", "Construir estradas", "Proteger áreas urbanas"],
-      respostaCorreta: 1,
-      justificativa: "Corredores ecológicos conectam habitats, permitindo a movimentação da fauna e preservação da biodiversidade."
-    },
-    {
-      pergunta: "Qual técnica é usada para evitar a erosão do solo causada pela água?",
-      opcoes: ["Queimada controlada", "Terraços", "Uso de pesticidas", "Irrigação por aspersão"],
-      respostaCorreta: 1,
-      justificativa: "Os terraços diminuem a velocidade da água e ajudam a prevenir a erosão do solo."
-    },
-    {
-      pergunta: "Qual o principal desafio da agricultura no cerrado brasileiro?",
-      opcoes: ["Solo ácido e pobre em nutrientes", "Excesso de água", "Clima frio", "Falta de mão de obra"],
-      respostaCorreta: 0,
-      justificativa: "O solo do cerrado é ácido e pobre em nutrientes, exigindo técnicas específicas para agricultura."
-    },
-    {
-      pergunta: "O que é rotação de culturas?",
-      opcoes: ["Cultivar a mesma planta sempre", "Alternar diferentes culturas no mesmo solo", "Usar fertilizantes sintéticos", "Plantar somente uma cultura por ano"],
-      respostaCorreta: 1,
-      justificativa: "Rotação de culturas é a alternância de diferentes plantas para melhorar a fertilidade e reduzir pragas."
-    },
-    {
-      pergunta: "Qual é o impacto da urbanização sobre o uso do solo?",
-      opcoes: ["Aumenta áreas agrícolas", "Reduz áreas naturais e agrícolas", "Não altera o uso do solo", "Melhora a biodiversidade"],
-      respostaCorreta: 1,
-      justificativa: "A urbanização reduz áreas naturais e agrícolas, substituindo-as por construções e infraestrutura."
-    },
+  <div id="game-container" style="display:none;">
+    <div id="score">Pontuação: 0</div>
+    <div id="timer">Tempo restante: 60s</div>
+    <div id="question-container">
+      <div id="question">Carregando pergunta...</div>
+      <div id="answers"></div>
+    </div>
+    <div id="resultado"></div>
+    <button id="restart-btn" style="display:none;">Reiniciar Jogo</button>
+  </div>
 
-    // Fase 3 - Difícil
-    {
-      pergunta: "Qual o papel das agroflorestas na sustentabilidade agrícola?",
-      opcoes: ["Substituir florestas nativas", "Combinar árvores com agricultura para conservar solo", "Eliminar pragas com inseticidas", "Aumentar o uso de máquinas"],
-      respostaCorreta: 1,
-      justificativa: "Agroflorestas combinam árvores e culturas agrícolas, ajudando na conservação do solo e biodiversidade."
-    },
-    {
-      pergunta: "O que é agricultura de precisão?",
-      opcoes: ["Uso de tecnologia para otimizar recursos", "Cultivo sem água", "Uso de sementes modificadas apenas", "Agricultura sem fertilizantes"],
-      respostaCorreta: 0,
-      justificativa: "Agricultura de precisão utiliza tecnologia para monitorar e gerenciar recursos, aumentando eficiência."
-    },
-    {
-      pergunta: "Qual o efeito da monocultura intensiva no solo?",
-      opcoes: ["Aumenta fertilidade", "Pode causar esgotamento de nutrientes", "Reduz erosão", "Melhora biodiversidade"],
-      respostaCorreta: 1,
-      justificativa: "Monocultura intensiva pode esgotar nutrientes do solo, reduzindo sua qualidade."
-    },
-    {
-      pergunta: "Por que é importante conservar áreas de vegetação nativa no entorno de propriedades rurais?",
-      opcoes: ["Para expansão agrícola", "Para manter a biodiversidade e proteger recursos hídricos", "Para construção de casas", "Para uso industrial"],
-      respostaCorreta: 1,
-      justificativa: "A conservação mantém biodiversidade, regula o ciclo da água e protege o solo."
-    },
-    {
-      pergunta: "O que é plantio direto?",
-      opcoes: ["Queimar a vegetação antes de plantar", "Plantio sem revolver o solo", "Uso intensivo de máquinas pesadas", "Rotação de culturas anual"],
-      respostaCorreta: 1,
-      justificativa: "Plantio direto preserva a estrutura do solo evitando erosão e perda de nutrientes."
-    }
-  ];
+  <script>
+    const perguntas = [
+      // Fase 1 - Fácil
+      {
+        pergunta: "Qual é o principal fator que afeta a biodiversidade em áreas urbanas?",
+        opcoes: ["Poluição sonora", "Fragmentação do habitat", "Iluminação pública", "Trânsito de veículos"],
+        respostaCorreta: 1,
+        justificativa: "A fragmentação do habitat interrompe corredores naturais, dificultando o fluxo e a sobrevivência das espécies."
+      },
+      {
+        pergunta: "Qual técnica agrícola é mais eficiente para conservação do solo em terrenos inclinados?",
+        opcoes: ["Plantio direto", "Rotação de culturas", "Terraços", "Queima controlada"],
+        respostaCorreta: 2,
+        justificativa: "Os terraços reduzem a velocidade da água da chuva, prevenindo erosão e preservando o solo."
+      },
+      {
+        pergunta: "Qual é a principal vantagem da agricultura orgânica?",
+        opcoes: ["Uso de fertilizantes sintéticos", "Maior produtividade imediata", "Preservação da saúde do solo", "Uso intensivo de pesticidas"],
+        respostaCorreta: 2,
+        justificativa: "A agricultura orgânica prioriza a saúde do solo, evitando produtos químicos sintéticos."
+      },
+      {
+        pergunta: "O que caracteriza a agricultura familiar?",
+        opcoes: ["Uso intensivo de máquinas", "Pequena escala e trabalho familiar", "Produção exclusivamente para exportação", "Uso exclusivo de sementes modificadas"],
+        respostaCorreta: 1,
+        justificativa: "A agricultura familiar é caracterizada pela pequena escala e o trabalho desenvolvido pela própria família."
+      },
+      {
+        pergunta: "Qual é o principal produto agrícola do Brasil?",
+        opcoes: ["Trigo", "Soja", "Café", "Milho"],
+        respostaCorreta: 1,
+        justificativa: "A soja é o principal produto agrícola do Brasil devido à sua ampla produção e exportação."
+      },
 
-  let posicaoAtual = 0;
-  let pontuacao = 0;
-  let tempoRestante = 120;
-  let timerInterval;
+      // Fase 2 - Médio
+      {
+        pergunta: "Qual a importância do corredor ecológico na zona rural?",
+        opcoes: ["Aumentar área de cultivo", "Conectar habitats para fauna", "Construir estradas", "Proteger áreas urbanas"],
+        respostaCorreta: 1,
+        justificativa: "Corredores ecológicos conectam habitats, permitindo a movimentação da fauna e preservação da biodiversidade."
+      },
+      {
+        pergunta: "Qual técnica é usada para evitar a erosão do solo causada pela água?",
+        opcoes: ["Queimada controlada", "Terraços", "Uso de pesticidas", "Irrigação por aspersão"],
+        respostaCorreta: 1,
+        justificativa: "Os terraços diminuem a velocidade da água e ajudam a prevenir a erosão do solo."
+      },
+      {
+        pergunta: "Qual o principal desafio da agricultura no cerrado brasileiro?",
+        opcoes: ["Solo ácido e pobre em nutrientes", "Excesso de água", "Clima frio", "Falta de mão de obra"],
+        respostaCorreta: 0,
+        justificativa: "O solo do cerrado é ácido e pobre em nutrientes, exigindo técnicas específicas para agricultura."
+      },
+      {
+        pergunta: "O que é rotação de culturas?",
+        opcoes: ["Cultivar a mesma planta sempre", "Alternar diferentes culturas no mesmo solo", "Usar fertilizantes sintéticos", "Plantar somente uma cultura por ano"],
+        respostaCorreta: 1,
+        justificativa: "Rotação de culturas é a alternância de diferentes plantas para melhorar a fertilidade e reduzir pragas."
+      },
+      {
+        pergunta: "Qual é o impacto da urbanização sobre o uso do solo?",
+        opcoes: ["Aumenta áreas agrícolas", "Reduz áreas naturais e agrícolas", "Não altera o uso do solo", "Melhora a biodiversidade"],
+        respostaCorreta: 1,
+        justificativa: "A urbanização reduz áreas naturais e agrícolas, substituindo-as por construções e infraestrutura."
+      },
 
-  const startBtn = document.getElementById("start-btn");
-  const startScreen = document.getElementById("start-screen");
-  const gameContainer = document.getElementById("game-container");
-  const questionEl = document.getElementById("question");
-  const answersEl = document.getElementById("answers");
-  const resultadoEl = document.getElementById("resultado");
-  const timerEl = document.getElementById("timer");
-  const scoreEl = document.getElementById("score");
-
-  startBtn.addEventListener("click", () => {
-    startScreen.style.display = "none";
-    gameContainer.style.display = "block";
-    iniciarPergunta();
-  });
-
-  function iniciarPergunta() {
-    resultadoEl.innerHTML = "";
-    tempoRestante = 120;
-    atualizarTimer();
-    startTimer();
-
-    const atual = perguntas[posicaoAtual];
-    questionEl.textContent = atual.pergunta;
-
-    answersEl.innerHTML = "";
-    atual.opcoes.forEach((opcao, i) => {
-      const btn = document.createElement("button");
-      btn.textContent = opcao;
-      btn.classList.add("answer-btn");
-      btn.disabled = false;
-      btn.addEventListener("click", () => responderPergunta(i));
-      answersEl.appendChild(btn);
-    });
-  }
-
-  function startTimer() {
-    clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      tempoRestante--;
-      atualizarTimer();
-
-      if (tempoRestante <= 0) {
-        clearInterval(timerInterval);
-        bloquearRespostas();
-        resultadoEl.innerHTML = `<p>Tempo esgotado! Você não ganhou nem perdeu pontos.</p>`;
-        avancarPergunta();
+      // Fase 3 - Difícil
+      {
+        pergunta: "Qual o papel das agroflorestas na sustentabilidade agrícola?",
+        opcoes: ["Substituir florestas nativas", "Combinar árvores com agricultura para conservar solo", "Eliminar pragas com inseticidas", "Aumentar o uso de máquinas"],
+        respostaCorreta: 1,
+        justificativa: "Agroflorestas combinam árvores e culturas agrícolas, ajudando na conservação do solo e biodiversidade."
+      },
+      {
+        pergunta: "O que é agricultura de precisão?",
+        opcoes: ["Uso de tecnologia para otimizar recursos", "Cultivo sem água", "Uso de sementes modificadas apenas", "Agricultura sem fertilizantes"],
+        respostaCorreta: 0,
+        justificativa: "Agricultura de precisão utiliza tecnologia para monitorar e gerenciar recursos, aumentando eficiência."
+      },
+      {
+        pergunta: "Qual o efeito da monocultura intensiva no solo?",
+        opcoes: ["Aumenta fertilidade", "Pode causar esgotamento de nutrientes", "Reduz erosão", "Melhora biodiversidade"],
+        respostaCorreta: 1,
+        justificativa: "Monocultura intensiva pode esgotar nutrientes do solo, reduzindo sua qualidade."
+      },
+      {
+        pergunta: "Por que é importante conservar áreas de vegetação nativa no entorno de propriedades rurais?",
+        opcoes: ["Para expansão agrícola", "Para manter a biodiversidade e proteger recursos hídricos", "Para construção de casas", "Para uso industrial"],
+        respostaCorreta: 1,
+        justificativa: "A conservação mantém biodiversidade, regula o ciclo da água e protege o solo."
+      },
+      {
+        pergunta: "O que é plantio direto?",
+        opcoes: ["Queimar a vegetação antes de plantar", "Plantio sem revolver o solo", "Uso intensivo de máquinas pesadas", "Rotação de culturas anual"],
+        respostaCorreta: 1,
+        justificativa: "Plantio direto preserva a estrutura do solo evitando erosão e perda de nutrientes."
       }
-    }, 1000);
-  }
 
-  function atualizarTimer() {
-    timerEl.textContent = `Tempo restante: ${tempoRestante}s`;
-  }
+    ];
 
-  function bloquearRespostas() {
-    const botoes = document.querySelectorAll(".answer-btn");
-    botoes.forEach(btn => btn.disabled = true);
-  }
+    let posicaoAtual = 0;
+    let pontuacao = 0;
+    let tempoRestante = 60;
+    let acertos = 0;
+    let erros = 0;
+    let pulos = 0;
+    let timerInterval;
 
-  function responderPergunta(indiceEscolhido) {
-    clearInterval(timerInterval);
-    bloquearRespostas();
+    const startBtn = document.getElementById("start-btn");
+    const startScreen = document.getElementById("start-screen");
+    const gameContainer = document.getElementById("game-container");
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const resultadoEl = document.getElementById("resultado");
+    const timerEl = document.getElementById("timer");
+    const scoreEl = document.getElementById("score");
+    const restartBtn = document.getElementById("restart-btn");
+    const rankingList = document.getElementById("ranking-list");
+    const playerNameInput = document.getElementById("player-name");
+    const submitScoreBtn = document.getElementById("submit-score");
 
-    const atual = perguntas[posicaoAtual];
-    const acertou = indiceEscolhido === atual.respostaCorreta;
+    startBtn.addEventListener("click", () => {
+      document.getElementById("start-sound").play();
+      startScreen.style.display = "none";
+      gameContainer.style.display = "block";
+      iniciarPergunta();
+    });
 
-    if (acertou) {
-      pontuacao += 10;
-      resultadoEl.innerHTML = `<p>Você acertou! Parabéns!</p><p><em>Justificativa:</em> ${atual.justificativa}</p>`;
-    } else {
-      pontuacao -= 10;
-      resultadoEl.innerHTML = `<p>Você errou.</p><p><em>Justificativa:</em> ${atual.justificativa}</p>`;
+    restartBtn.addEventListener("click", iniciarJogo);
+
+    function iniciarJogo() {
+      // Esconder o ranking quando reiniciar o jogo
+      document.getElementById("ranking").style.display = "none";
+      startScreen.style.display = "none";
+      gameContainer.style.display = "block";
+
+      posicaoAtual = 0;
+      pontuacao = 0;
+      acertos = 0;
+      erros = 0;
+      pulos = 0;
+      scoreEl.textContent = "Pontuação: 0";
+      resultadoEl.innerHTML = "";
+      restartBtn.style.display = "none";
+      iniciarPergunta();
     }
-    scoreEl.textContent = `Pontuação: ${pontuacao}`;
 
-    // Aguarda 3 segundos para mostrar o resultado e vai para a próxima pergunta
-    setTimeout(avancarPergunta, 3000);
-  }
+    function iniciarPergunta() {
+      resultadoEl.innerHTML = "";
+      tempoRestante = 60;
+      atualizarTimer();
+      startTimer();
 
-  function avancarPergunta() {
-    posicaoAtual++;
-    if (posicaoAtual >= perguntas.length) {
-      resultadoEl.innerHTML = `<h2>Fim do jogo!</h2><p>Sua pontuação final foi: ${pontuacao}</p>`;
+      const atual = perguntas[posicaoAtual];
+      questionEl.textContent = atual.pergunta;
+
+      answersEl.innerHTML = "";
+      atual.opcoes.forEach((opcao, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = opcao;
+        btn.classList.add("answer-btn");
+        btn.disabled = false;
+        btn.addEventListener("click", () => responderPergunta(i));
+        answersEl.appendChild(btn);
+      });
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        tempoRestante--;
+        atualizarTimer();
+
+        if (tempoRestante <= 0) {
+          clearInterval(timerInterval);
+          bloquearRespostas();
+          resultadoEl.innerHTML = `<p>Tempo esgotado! Você não ganhou nem perdeu pontos.</p><p><em>Justificativa:</em> ${perguntas[posicaoAtual].justificativa}</p>`;
+          pulos++;
+          setTimeout(avancarPergunta, 3000);
+        }
+      }, 1000);
+    }
+
+    function atualizarTimer() {
+      timerEl.textContent = `Tempo restante: ${tempoRestante}s`;
+    }
+
+    function bloquearRespostas() {
+      const botoes = document.querySelectorAll(".answer-btn");
+      botoes.forEach(btn => btn.disabled = true);
+    }
+
+    function responderPergunta(indiceEscolhido) {
+      clearInterval(timerInterval);
+      bloquearRespostas();
+
+      const atual = perguntas[posicaoAtual];
+      const acertou = indiceEscolhido === atual.respostaCorreta;
+
+      if (acertou) {
+        pontuacao += 10;
+        acertos++;
+        resultadoEl.innerHTML = `<p>Você acertou! Parabéns!</p><p><em>Justificativa:</em> ${atual.justificativa}</p>`;
+      } else {
+        pontuacao -= 10;
+        erros++;
+        resultadoEl.innerHTML = `<p>Você errou.</p><p><em>Justificativa:</em> ${atual.justificativa}</p>`;
+      }
+      scoreEl.textContent = `Pontuação: ${pontuacao}`;
+
+      setTimeout(avancarPergunta, 3000);
+    }
+
+    function avancarPergunta() {
+      posicaoAtual++;
+      if (posicaoAtual >= perguntas.length) {
+        finalizarJogo();
+      } else {
+        iniciarPergunta();
+      }
+    }
+
+    function finalizarJogo() {
       questionEl.textContent = "";
       answersEl.innerHTML = "";
       timerEl.textContent = "";
-      return;
+
+      resultadoEl.innerHTML = `
+        <h2>Fim do jogo!</h2>
+        <p>Sua pontuação final foi: ${pontuacao}</p>
+        <p>Você acertou <strong>${acertos}</strong> de ${perguntas.length} perguntas.</p>
+        <p>Erros: <strong>${erros}</strong></p>
+        <p>Tempo esgotado em: <strong>${pulos}</strong> perguntas.</p>
+      `;
+      restartBtn.style.display = "inline-block"; // Mostrar botão para reiniciar
+
+      // Exibir o ranking
+      showRanking(); // Chama a função para mostrar o ranking
     }
-    iniciarPergunta();
-  }
-</script>
 
+    function saveScore(playerName, score) {
+      let ranking = JSON.parse(localStorage.getItem("ranking")) || [];
+      ranking.push({ name: playerName, score });
+      ranking.sort((a, b) => b.score - a.score); // Ordenando do maior para o menor
+      localStorage.setItem("ranking", JSON.stringify(ranking));
+      showRanking();
+    }
+
+    function showRanking() {
+      const ranking = JSON.parse(localStorage.getItem("ranking")) || [];
+      rankingList.innerHTML = ""; // Limpar a lista de ranking atual
+      ranking.forEach((player, index) => {
+        const li = document.createElement("li");
+        li.textContent = `${index + 1}. ${player.name} - ${player.score} pontos`;
+        rankingList.appendChild(li);
+      });
+      document.getElementById("ranking").style.display = "block"; // Exibir o ranking
+    }
+
+    submitScoreBtn.addEventListener("click", () => {
+      const playerName = playerNameInput.value.trim();
+      if (playerName) {
+        saveScore(playerName, pontuacao);
+      } else {
+        alert("Por favor, insira seu nome.");
+      }
+    });
+  </script>
 </body>
+
 </html>
-
-
